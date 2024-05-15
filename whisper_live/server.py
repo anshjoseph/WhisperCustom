@@ -354,6 +354,7 @@ class ServeClientBase(object):
     RATE = 16000
     SERVER_READY = "SERVER_READY"
     DISCONNECT = "DISCONNECT"
+    UTTERANCE_END = "UTTERANCE_END"
 
     def __init__(self, client_uid, websocket):
         self.client_uid = client_uid
@@ -368,8 +369,8 @@ class ServeClientBase(object):
         self.t_start = None
         self.exit = False
         self.same_output_threshold = 0
-        self.show_prev_out_thresh = 5   # if pause(no output from whisper) show previous output for 5 seconds
-        self.add_pause_thresh = 3       # add a blank to segment list as a pause(no speech) for 3 seconds
+        self.show_prev_out_thresh = 3   # if pause(no output from whisper) show previous output for 5 seconds
+        self.add_pause_thresh = 0.8       # add a blank to segment list as a pause(no speech) for 3 seconds
         self.transcript = []
         self.send_last_n_segments = 10
 
@@ -378,6 +379,9 @@ class ServeClientBase(object):
 
         # threading
         self.lock = threading.Lock()
+
+        # init time
+        self.client_start_time = time.time()
 
     def speech_to_text(self):
         raise NotImplementedError
@@ -515,9 +519,15 @@ class ServeClientBase(object):
         """
         self.websocket.send(json.dumps({
             "uid": self.client_uid,
-            "message": self.DISCONNECT
+            "message": self.DISCONNECT,
+            "duration": time.time() - self.client_start_time
         }))
-
+    def uttrence_end(self):
+        self.websocket.send(json.dumps({
+            "uid": self.client_uid,
+            "message": self.UTTERANCE_END
+        }))
+    
     def cleanup(self):
         """
         Perform cleanup tasks before exiting the transcription service.

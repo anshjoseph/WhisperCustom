@@ -293,7 +293,7 @@ class TranscriptionTeeClient:
         clients (list): the underlying Client instances responsible for handling WebSocket connections.
     """
     def __init__(self, clients):
-        self.clients = clients
+        self.clients:list[Client] = clients
         if not self.clients:
             raise Exception("At least one client is required.")
         self.chunk = 8192

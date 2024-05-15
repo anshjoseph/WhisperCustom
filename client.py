@@ -2,8 +2,8 @@ from whisper_live.client import TranscriptionClient
 
 
 client = TranscriptionClient(
-  # "44.221.66.152",
-  "127.0.0.1",
+  "44.221.66.152",
+  # "127.0.0.1",
   9090,
   translate=False,
   model="tiny.en",
