@@ -71,7 +71,7 @@ class BasicWhisperClient:
         if len(segments) > 1 and len(segments) - self.seg_ptr >= 2:
             self.commited_list.append(segments[self.seg_ptr]['text'])
             segments[self.seg_ptr]["is_final"] = True
-            self.onTranscript(segments)
+            self.onTranscript(segments[self.seg_ptr])
             self.seg_ptr += 1
         return segments
 
