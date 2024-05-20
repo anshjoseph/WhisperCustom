@@ -9,7 +9,7 @@ from websockets.sync.server import serve
 from websockets.exceptions import ConnectionClosed
 from .vad import VoiceActivityDetector
 from .transcriber import WhisperModel
-from CustomWhisper.logger_config import configure_logger
+from WhisperLive.logger_config import configure_logger
 
 logging = configure_logger(__name__)
 

@@ -1,4 +1,4 @@
-from CustomWhisper import BasicWhisperClient
+from WhisperLive import BasicWhisperClient
 import numpy as np
 import pyaudio
 import logging

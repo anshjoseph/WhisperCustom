@@ -1,4 +1,4 @@
-from CustomWhisper import TranscriptionServer
+from WhisperLive import TranscriptionServer
 import argparse
 
 if __name__ == "__main__":

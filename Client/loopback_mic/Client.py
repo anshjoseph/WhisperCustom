@@ -1,6 +1,6 @@
 import soundcard as sc
 import soundfile as sf
-from CustomWhisper import BasicWhisperClient
+from WhisperLive import BasicWhisperClient
 import numpy as np
 from utils import write_bytesIO
 from scipy.io.wavfile import write,read

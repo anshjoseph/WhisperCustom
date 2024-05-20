@@ -7,10 +7,10 @@ import torch
 import numpy as np
 from websockets.sync.server import serve
 from websockets.exceptions import ConnectionClosed
-from CustomWhisper.whisper_live.vad import VoiceActivityDetector
-from CustomWhisper.whisper_live.transcriber import WhisperModel
-from CustomWhisper.whisper_live.server import ServeClientBase, ClientManager
-from CustomWhisper.whisper_live.HypothesisBuffer import HypothesisBufferPrefix
+from WhisperLive.whisper_live.vad import VoiceActivityDetector
+from WhisperLive.whisper_live.transcriber import WhisperModel
+from WhisperLive.whisper_live.server import ServeClientBase, ClientManager
+from WhisperLive.whisper_live.HypothesisBuffer import HypothesisBufferPrefix
 from .denoise import LoadModel, Demucs, BasicInferenceMechanism
 from .logger_config import configure_logger
 
