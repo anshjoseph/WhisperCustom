@@ -23,12 +23,17 @@ class TranscriptionServer:
     def bytes_to_float_array(audio:np.ndarray):
         return audio.astype(np.float32) / 32768.0
     
-    def __init__(self,use_vad=True,denoise=False,hotwords = None):
+    def __init__(self,use_vad=True,denoise=False,hotwords=None,model_list=[]):
         self.client_manager = ClientManager()
         self.no_voice_activity_chunks = 0
         self.use_vad = use_vad
         self.denoise = denoise
         self.hotwords = hotwords
+        self.model_list = model_list
+        self.default_model_index = 0
+        if model_list == None or len(model_list) <= 0:
+            raise("without model list we can't start server")
+        
         if self.denoise:
             self.noise_deduction_model:Demucs = LoadModel()
             self.infrence_mech:BasicInferenceMechanism = BasicInferenceMechanism(self.noise_deduction_model)
@@ -38,20 +43,23 @@ class TranscriptionServer:
             self.infrence_mech = None
         logger.info("TranscriptionServer is created")
 
-    def initialize_client(self, websocket, options, faster_whisper_custom_model_path):
+    def initialize_client(self, websocket, options):
         logger.info(options)
-        # checking the model
-        if faster_whisper_custom_model_path is not None and os.path.exists(faster_whisper_custom_model_path):
-            logger.info(f"Using custom model {faster_whisper_custom_model_path}")
-            options["model"] = faster_whisper_custom_model_path
+        if options["model"] not in self.model_list:
+            logger.info("model name is not  in model list so getting revert to default model")
+            model = f"./ASR/{self.model_list[self.default_model_index]}"
+        else:
+            logger.info("model is detected")
+            model =  f"./ASR/{options['model']}"
         
+        logger.info(f"loaded model {model}")
         # making the FasterWhisper server
         client:ServeClientFasterWhisper = ServeClientFasterWhisper(
             websocket,
             language=options["language"],
             task=options["task"],
             client_uid=options["uid"],
-            model=options["model"],
+            model=model,
             initial_prompt=options.get("initial_prompt"),
             vad_parameters=options.get("vad_parameters"),
             use_vad=self.use_vad,
@@ -85,7 +93,7 @@ class TranscriptionServer:
             logger.info(audio)
             return audio
 
-    def handle_new_connection(self, websocket, faster_whisper_custom_model_path):
+    def handle_new_connection(self, websocket):
         try:
             logger.info("New client connected")
             options = websocket.recv()
@@ -97,7 +105,7 @@ class TranscriptionServer:
 
             # if self.backend == "tensorrt":
             self.vad_detector = VoiceActivityDetector(frame_rate=self.RATE)
-            self.initialize_client(websocket, options, faster_whisper_custom_model_path)
+            self.initialize_client(websocket, options)
             return True
         
         except json.JSONDecodeError:
@@ -125,8 +133,7 @@ class TranscriptionServer:
 
     def recv_audio(self,
                    websocket,
-                   backend="faster_whisper",
-                   faster_whisper_custom_model_path="./LLM/whisper_tiny_ct"):
+                   backend="faster_whisper"):
         """
         Receive audio chunks from a client in an infinite loop.
 
@@ -153,7 +160,7 @@ class TranscriptionServer:
         """
         logger.info("start receving audio")
         self.backend = backend
-        if not self.handle_new_connection(websocket, faster_whisper_custom_model_path):
+        if not self.handle_new_connection(websocket):
             return
 
         try:
@@ -173,9 +180,7 @@ class TranscriptionServer:
 
     def run(self,
             host,
-            port=9090,
-            backend="tensorrt",
-            faster_whisper_custom_model_path=None):
+            port=9090):
         """
         Run the transcription server.
 
@@ -186,8 +191,7 @@ class TranscriptionServer:
         with serve(
             functools.partial(
                 self.recv_audio,
-                backend=backend,
-                faster_whisper_custom_model_path=faster_whisper_custom_model_path
+                backend="faster_whisper",
             ),
             host,
             port

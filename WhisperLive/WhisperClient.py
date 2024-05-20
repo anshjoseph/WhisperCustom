@@ -9,13 +9,14 @@ from websockets.exceptions import *
 
 
 class BasicWhisperClient:
-    def __init__(self,host:str,port:int) -> None:
+    def __init__(self,host:str, port:int, model:str) -> None:
         self.ws_url =  f"ws://{host}:{port}"
         self.ws_connection:websocket.WebSocket = websocket.WebSocket()
         self.ws_connection.connect(self.ws_url)
         self.client_id:str = str(uuid.uuid4())
         self.retrive_token= None
         self.recever_task = None
+        self.model = model
 
 
         self.commited_list:list[str] = []
@@ -37,7 +38,7 @@ class BasicWhisperClient:
                 "uid": str(uuid.uuid4()),
                 "language": "en",
                 "task": "transcribe",
-                "model": "small",
+                "model": self.model,
                 "use_vad": True
             }
         ))
@@ -116,8 +117,9 @@ class BasicWhisperClient:
                         # self.onDisconnect()
                         break
                     elif data['message'] == "UTTERANCE_END":
-                        self.prev_segment[-1]['is_final'] = True
-                        # print(self.prev_segment)
+                        if len(self.prev_segment) > 0:
+                            self.prev_segment[-1]['is_final'] = True
+                        # note make this changes
                     elif data['message'] == 'SERVER_READY':
                         print("server id ready")
                     

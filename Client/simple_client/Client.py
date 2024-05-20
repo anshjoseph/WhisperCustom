@@ -6,7 +6,7 @@ import logging
 
 class Client(BasicWhisperClient):
     def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port)
+        super().__init__(host, port, "whisper_tiny_ct")
     def onTranscript(self, segment: dict):
         super().onTranscript(segment)
         print(segment)

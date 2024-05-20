@@ -3,4 +3,4 @@
 __pycache__/
 *.egg-info
 Server/ASR/whisper_tiny_ct
-
+Server/ASR/tiny

@@ -12,7 +12,7 @@ import torchaudio
 OUTPUT_FILE = "out.srt"
 class Client(BasicWhisperClient):
     def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port)
+        super().__init__(host, port, "tiny")
         self.__segments:list = []
         self.flush_threshold = 3
     def flush_on_file(self,segment):
