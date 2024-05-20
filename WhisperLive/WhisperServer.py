@@ -23,11 +23,12 @@ class TranscriptionServer:
     def bytes_to_float_array(audio:np.ndarray):
         return audio.astype(np.float32) / 32768.0
     
-    def __init__(self,use_vad=True,denoise=False):
+    def __init__(self,use_vad=True,denoise=False,hotwords = None):
         self.client_manager = ClientManager()
         self.no_voice_activity_chunks = 0
         self.use_vad = use_vad
         self.denoise = denoise
+        self.hotwords = hotwords
         if self.denoise:
             self.noise_deduction_model:Demucs = LoadModel()
             self.infrence_mech:BasicInferenceMechanism = BasicInferenceMechanism(self.noise_deduction_model)
@@ -38,6 +39,7 @@ class TranscriptionServer:
         logger.info("TranscriptionServer is created")
 
     def initialize_client(self, websocket, options, faster_whisper_custom_model_path):
+        logger.info(options)
         # checking the model
         if faster_whisper_custom_model_path is not None and os.path.exists(faster_whisper_custom_model_path):
             logger.info(f"Using custom model {faster_whisper_custom_model_path}")
@@ -53,6 +55,7 @@ class TranscriptionServer:
             initial_prompt=options.get("initial_prompt"),
             vad_parameters=options.get("vad_parameters"),
             use_vad=self.use_vad,
+            hotwords=self.hotwords
         )
         logger.info("Running faster_whisper backend.")
 
@@ -236,7 +239,7 @@ class TranscriptionServer:
 
 
 class ServeClientFasterWhisper(ServeClientBase):
-    def __init__(self, websocket, task="transcribe", device=None, language=None, client_uid=None, model="./LLM/whisper_tiny_ct",
+    def __init__(self, websocket, hotwords=None, task="transcribe", device=None, language=None, client_uid=None, model="./LLM/whisper_tiny_ct",
                  initial_prompt=None, vad_parameters=None, use_vad=True):
         """
         Initialize a ServeClient instance.
@@ -254,6 +257,7 @@ class ServeClientFasterWhisper(ServeClientBase):
             initial_prompt (str, optional): Prompt for whisper inference. Defaults to None.
         """
         super().__init__(client_uid, websocket)
+        self.hotwords = hotwords
         self.model_sizes = [
             "tiny", "tiny.en", "base", "base.en", "small", "small.en",
             "medium", "medium.en", "large-v2", "large-v3",
@@ -374,7 +378,8 @@ class ServeClientFasterWhisper(ServeClientBase):
             language=self.language,
             task=self.task,
             vad_filter=self.use_vad,
-            vad_parameters=self.vad_parameters if self.use_vad else None)
+            vad_parameters=self.vad_parameters if self.use_vad else None,
+            hotwords=self.hotwords)
         logger.info(result)
 
         if self.language is None and info is not None:

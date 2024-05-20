@@ -2,7 +2,7 @@ from WhisperLive import TranscriptionServer
 import argparse
 
 if __name__ == "__main__":
-    server = TranscriptionServer()
+    server = TranscriptionServer(use_vad=True,denoise=True,hotwords=['diksha'])
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', '-p',
                         type=int,

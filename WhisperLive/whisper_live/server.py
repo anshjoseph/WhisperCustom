@@ -813,7 +813,8 @@ class ServeClientFasterWhisper(ServeClientBase):
             language=self.language,
             task=self.task,
             vad_filter=self.use_vad,
-            vad_parameters=self.vad_parameters if self.use_vad else None)
+            vad_parameters=self.vad_parameters if self.use_vad else None,
+            hotwords=[""])
 
         if self.language is None and info is not None:
             self.set_language(info)

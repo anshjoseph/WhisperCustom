@@ -36,7 +36,7 @@ class BasicWhisperClient:
             {
                 "uid": str(uuid.uuid4()),
                 "language": "en",
-                "task": "translate",
+                "task": "transcribe",
                 "model": "small",
                 "use_vad": True
             }
