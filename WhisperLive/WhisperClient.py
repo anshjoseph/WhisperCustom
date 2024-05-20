@@ -80,8 +80,6 @@ class BasicWhisperClient:
     def AddAttributes(self,segments:dict):
         segments_list = [seg for seg in segments['segments']]
 
-        # for 
-
         for i,seg in enumerate(segments_list):
             if seg['text'] in self.commited_list:
                 seg["is_final"] = True
@@ -95,7 +93,10 @@ class BasicWhisperClient:
     def get_segment(self):
         while True:
             try:
-                data:dict = json.loads(self.ws_connection.recv())
+                print("receverd some thing")
+                __data = self.ws_connection.recv()
+                print(__data)
+                data:dict = json.loads(__data)
                 if "message" not in data:
                     # self.segments.put(data)
                     data = self.AddAttributes(data)
@@ -112,16 +113,19 @@ class BasicWhisperClient:
                     print(data)
                     if data['message'] == 'DISCONNECT':
                         self.ws_connection.close()
-                        self.onDisconnect()
+                        # self.onDisconnect()
                         break
                     elif data['message'] == "UTTERANCE_END":
                         self.prev_segment[-1]['is_final'] = True
-                        print(self.prev_segment)
+                        # print(self.prev_segment)
                     elif data['message'] == 'SERVER_READY':
                         print("server id ready")
                     
 
-            except:
+            except Exception as e:
+                import traceback
+                print(traceback.format_exc())
+                print(f"rcever stoped {e}")
                 break
     
          
