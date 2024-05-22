@@ -1,0 +1,11 @@
+FROM python:3.10.13-slim
+WORKDIR /app
+
+RUN apt-get update && apt-get install libgomp1 git -y
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y --no-install-recommends ffmpeg
+RUN pip install --force-reinstall git+https://github.com/bolna-ai/streaming-whisper-server.git
+RUN pip install transformers
+RUN python3 -m WhisperLive -c server
+RUN ct2-transformers-converter --model openai/whisper-tiny --copy_files preprocessor_config.json --output_dir ./Server/ASR/whisper_tiny_ --quantization float16
+EXPOSE 9000
+CMD ["uvicorn", "quickstart_server:app", "--host", "0.0.0.0", "--port", "5001"]
