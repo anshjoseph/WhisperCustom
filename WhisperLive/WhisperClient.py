@@ -53,7 +53,7 @@ class BasicWhisperClient:
         return False
     
     def send_data_chunk(self,chunk:bytes):
-        print("send the chunk")
+        # print("send the chunk")
         self.ws_connection.send(chunk,websocket.ABNF.OPCODE_BINARY)
     
 
