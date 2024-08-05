@@ -18,15 +18,10 @@ app = FastAPI()
 class Client(BasicWhisperClient):
     def __init__(self, host: str, port: int) -> None:
         super().__init__(host, port, "whisper_tiny_ct")
-        self.time = time.time()
-        self.bool = True
-        segments = ""
+        self.transcribe = "" 
     def onTranscript(self, segment: dict):
         super().onTranscript(segment)
-        if self.bool:
-            self.bool = False
-            self.time = time.time() - self.time
-        print(segment)
+        self.transcribe += f"start: {segment.get('start')}, end: {segment.get('end')}, text: {segment.get('text')}\n"
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,7 +43,7 @@ def numpy_audioop_helper(x, xdtype, func, width, ydtype):
 @app.websocket("/connection")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    client = Client("52.70.153.157",4231)
+    client = Client("52.70.153.157",9001)
     client.MakeConnectionToServer()
     print(client.retrive_token)
     
@@ -71,7 +66,12 @@ async def websocket_endpoint(websocket: WebSocket):
                 if len(audio) > 8000:
                     client.send_data_chunk(np.asarray(audio).tobytes())
                     audio.clear()
+        
+        
     except Exception as e:
+        print(f"TIME: {client._time}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print(client.transcribe)
         client.SendEOS()
 if __name__ == "__main__":
     uvicorn.run('quickstart_server:app',port=5001,reload=True)

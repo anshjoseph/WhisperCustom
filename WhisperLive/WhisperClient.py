@@ -6,6 +6,7 @@ import websocket
 import uuid
 from queue import Queue
 from websockets.exceptions import *
+import time
 
 
 class BasicWhisperClient:
@@ -27,6 +28,9 @@ class BasicWhisperClient:
         self.curr_segment = None
         self.seg_ptr = 0
         self.same_data_count = 0
+
+
+        self._time = -1
 
 
         self.segments_collection_thread:threading.Thread = threading.Thread(target=self.get_segment) 
@@ -92,11 +96,14 @@ class BasicWhisperClient:
         
     
     def get_segment(self):
+        __ = time.time()
         while True:
             try:
                 print("receverd some thing")
                 __data = self.ws_connection.recv()
                 print(__data)
+                if self._time == -1:
+                    self._time = time.time() - __
                 data:dict = json.loads(__data)
                 if "message" not in data:
                     # self.segments.put(data)

@@ -7,11 +7,17 @@ import logging
 class Client(BasicWhisperClient):
     def __init__(self, host: str, port: int) -> None:
         super().__init__(host, port, "whisper_tiny_ct")
+        self.transcribe = ""
+        self.counter = 0
     def onTranscript(self, segment: dict):
         super().onTranscript(segment)
-        print(segment)
+        self.transcribe += f"start: {segment.get('start')}, end: {segment.get('end')}, text: {segment.get('text')}\n"
+        # print(f"SEGMENT {segment}")
+        # if segment[self.counter].get("is_final"):
+        #     self.transcribe = f"start: {segment[self.counter].get('start')}, end: {segment[self.counter].get('end')}, text: {segment[self.counter].get('text')}\n"
+        #     self.counter+=1
 
-client = Client("52.70.153.157",4231)
+client = Client("52.70.153.157",9001)
 client.MakeConnectionToServer()
 print(client.retrive_token)
 
@@ -42,8 +48,11 @@ try:
         try:
             client.send_data_chunk(audio_array.tobytes())
         except Exception as e:
+            print(client.transcribe)
             print(e)
             break
 
 except KeyboardInterrupt:
     print(client.SendEOS())
+
+print(client.transcribe)
