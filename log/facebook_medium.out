@@ -1,0 +1,11 @@
+/media/ansh/22A048A8A04883EF/WORK/BOLNA/CustomWhisperLive/TestBanch/telephoney/quickstart_server.py:7: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+  from audioop import ulaw2lin, ratecv
+INFO:     Will watch for changes in these directories: ['/media/ansh/22A048A8A04883EF/WORK/BOLNA/CustomWhisperLive/TestBanch/telephoney']
+INFO:     Uvicorn running on http://127.0.0.1:5001 (Press CTRL+C to quit)
+INFO:     Started reloader process [58715] using WatchFiles
+INFO:     Started server process [58801]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+2024-08-06 10:27:50.951 INFO {main} [_log_changes] 3 changes detected
+INFO:     ('54.242.150.125', 0) - "WebSocket /connection" [accepted]
+INFO:     connection closed

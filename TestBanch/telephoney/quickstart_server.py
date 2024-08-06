@@ -17,7 +17,7 @@ app = FastAPI()
 
 class Client(BasicWhisperClient):
     def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port, "whisper_tiny_ct")
+        super().__init__(host, port, "whisper_medium")
         self.transcribe = "" 
     def onTranscript(self, segment: dict):
         super().onTranscript(segment)
@@ -43,9 +43,11 @@ def numpy_audioop_helper(x, xdtype, func, width, ydtype):
 @app.websocket("/connection")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
+    __ = time.time()
     client = Client("52.70.153.157",9001)
     client.MakeConnectionToServer()
     print(client.retrive_token)
+    print(f"WEBSOCKET TIME: {time.time()- __}")
     
     audio = []
     try:

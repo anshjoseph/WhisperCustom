@@ -1,0 +1,21 @@
+/media/ansh/22A048A8A04883EF/WORK/BOLNA/CustomWhisperLive/TestBanch/telephoney/quickstart_server.py:7: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+  from audioop import ulaw2lin, ratecv
+INFO:     Will watch for changes in these directories: ['/media/ansh/22A048A8A04883EF/WORK/BOLNA/CustomWhisperLive/TestBanch/telephoney']
+INFO:     Uvicorn running on http://127.0.0.1:5001 (Press CTRL+C to quit)
+INFO:     Started reloader process [46272] using WatchFiles
+INFO:     Started server process [46752]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+2024-08-06 10:13:27.876 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:28.226 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:28.577 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:28.928 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:29.279 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:29.630 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:29.981 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:30.333 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:30.684 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:31.035 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:31.386 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:31.737 INFO {main} [_log_changes] 1 change detected
+2024-08-06 10:13:32.088 INFO {main} [_log_changes] 1 change detected
