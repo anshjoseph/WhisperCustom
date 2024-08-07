@@ -17,7 +17,7 @@ app = FastAPI()
 
 class Client(BasicWhisperClient):
     def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port, "whisper_medium")
+        super().__init__(host, port, "6e816d54-31b2-47de-93ca-4bc1dd17b77c")
         self.transcribe = "" 
     def onTranscript(self, segment: dict):
         super().onTranscript(segment)
