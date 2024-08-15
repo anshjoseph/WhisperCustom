@@ -3,15 +3,27 @@ import numpy as np
 import pyaudio
 import logging
 import time
+import requests
 
+
+
+
+res = requests.post("http://127.0.0.1:6700/load-model/",json={
+    "model-name":"tiny",
+    "mode":"auto"
+})
+
+print(res.status_code)
+model = res.json()["model-id"]
+print(model)
 class Client(BasicWhisperClient):
     def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port, "whisper_tiny")
+        super().__init__(host, port, model)
     def onTranscript(self, segment: dict):
         super().onTranscript(segment)
         print(segment)
 __ = time.time()
-client = Client("127.0.0.1",4231)
+client = Client("127.0.0.1",9001)
 client.MakeConnectionToServer()
 print(client.retrive_token)
 print(f"TIME FOR WEBSOCKET CONNECTION: {time.time()- __}")
@@ -43,11 +55,8 @@ try:
         try:
             client.send_data_chunk(audio_array.tobytes())
         except Exception as e:
-            print(client.transcribe)
             print(e)
             break
 
 except KeyboardInterrupt:
     print(client.SendEOS())
-
-print(client.transcribe)
