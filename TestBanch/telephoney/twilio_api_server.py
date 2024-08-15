@@ -17,9 +17,9 @@ app = FastAPI()
 load_dotenv()
 port = 8001
 
-twilio_account_sid = "AC136d06c975b7eedcb9b30df471a4cc64"
-twilio_auth_token = "bedf922cf7b3d3477c8f850c37efbc68"
-twilio_phone_number = "+19125590693" 
+twilio_account_sid = ""
+twilio_auth_token = ""
+twilio_phone_number = "" 
 
 print(twilio_account_sid)
 print(twilio_auth_token)
